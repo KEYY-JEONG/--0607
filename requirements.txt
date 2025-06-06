@@ -1,0 +1,6 @@
+Flask
+pdfminer.six
+python-docx
+requests
+Pillow
+python-dotenv
