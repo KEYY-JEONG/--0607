@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.py[cod]
+
+# Virtual environments
+venv/
+
+# Environment variables
+.env
+
+# Generated files
+docs/*.md
+docs/*.docx
+static/images/*
+uploads/*
+!uploads/.gitkeep
+static/images/.gitkeep
+
+# Others
+.DS_Store

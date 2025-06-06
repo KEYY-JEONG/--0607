@@ -40,3 +40,99 @@ T: Tone & Style (스타일)
 E: Example (예시)
 
 사용자가 “sample.pdf” 업로드 → 서버에서 추출 → OPEN API 호출 → 요약하여-> Markdown 저장 → Gemini API로 시각화 → 최종 result.html에 출력
+
+## Step‑by‑Step Guide
+
+The following instructions assume you will clone the repository into
+`/Users/keyy/0607_Codex`. Adapt the paths if you choose a different
+location.
+
+1. **Install Python**
+   
+   Make sure Python 3.8 or higher is installed and available in your
+   command line.
+
+2. **Clone the repository**
+
+   Open a terminal and run:
+
+   ```bash
+   mkdir -p /Users/keyy/0607_Codex
+   git clone <repository-url> /Users/keyy/0607_Codex
+   cd /Users/keyy/0607_Codex
+   ```
+
+   Replace `<repository-url>` with the HTTPS address of this project.
+
+3. **Create a virtual environment (recommended)**
+   
+   ```bash
+   python3 -m venv venv
+   source venv/bin/activate
+   ```
+
+4. **Install dependencies**
+   
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+   If you run into connection errors while installing packages, you can
+   download the required `.whl` files on another machine and transfer them
+   here. Install them individually with `pip install <package>.whl`.
+
+5. **Create a `.env` file for API keys**
+
+   Copy the provided example and fill in your credentials. Leave them blank if
+   you want to run everything locally.
+
+   ```bash
+   cp .env.example .env
+   # Edit .env in your editor and add API keys
+   ```
+
+   The application loads these variables automatically using `python-dotenv`.
+   You may also export them in your shell for the current session:
+
+   ```bash
+   export OPENAI_API_KEY="your_actual_openai_key_here"
+   export ANTHROPIC_API_KEY="your_actual_anthropic_key_here"
+   export GEMINI_API_KEY="your_actual_gemini_key_here"
+   ```
+
+   - `OPENAI_API_KEY` – used for text summarization
+   - `ANTHROPIC_API_KEY` – used for generating visualization prompts
+   - `GEMINI_API_KEY` – reserved for future Gemini image generation
+
+6. **Run the Flask server**
+
+   ```bash
+   python app.py
+   ```
+
+7. **Open the web interface**
+   
+   Visit `http://localhost:5000` in your browser. Upload a PDF to see the
+   generated summary and visualization.
+
+8. **Run tests**
+
+   You can verify the code compiles by running:
+
+   ```bash
+   python -m py_compile app.py utils/*.py
+   ```
+
+Generated summaries are saved in the `docs/` folder as both Markdown and
+DOCX files. Visualization images are placed under `static/images/`. Each
+file name includes a timestamp so previous results are preserved.
+
+### Customizing the Server
+
+You can change the port or enable debug mode using environment variables:
+
+```bash
+export FLASK_PORT=8080
+export FLASK_DEBUG=true
+python app.py
+```
