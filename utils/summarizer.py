@@ -1,6 +1,10 @@
 import os
 import re
-import requests
+
+try:
+    import requests  # Only needed when using the external API
+except ImportError:  # pragma: no cover - requests may not be installed
+    requests = None
 
 API_URL = os.environ.get('SUMMARY_API_URL')
 API_KEY = os.environ.get('SUMMARY_API_KEY')
@@ -28,6 +32,11 @@ def summarize_text(text: str) -> str:
             lines.append(" ".join(seg) if seg else "N/A")
             lines.append("")
         return "\n".join(lines).strip()
+
+    if requests is None:
+        raise RuntimeError(
+            "The requests package is required for API summarization but is not installed."
+        )
 
     headers = {"Authorization": f"Bearer {API_KEY}"}
     payload = {"text": text}
