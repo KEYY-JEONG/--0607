@@ -1,23 +1,36 @@
 import os
+import re
 import requests
 
-API_URL = os.environ.get('SUMMARY_API_URL')  # Placeholder for AI API endpoint
+API_URL = os.environ.get('SUMMARY_API_URL')
 API_KEY = os.environ.get('SUMMARY_API_KEY')
 
 
 def summarize_text(text: str) -> str:
-    """Send text to an external API to produce a structured summary."""
+    """Create a structured summary of the provided text.
+
+    If API credentials are configured, send the text to the external API.
+    Otherwise fallback to a simple local summarization based on sentence
+    extraction.
+    """
     if not API_URL or not API_KEY:
-        # Placeholder summary when API info is missing
+        sentences = re.split(r'(?<=[.!?])\s+', text.strip())
+        abstract = " ".join(sentences[:3])
+        introduction = " ".join(sentences[3:8])
+        results = " ".join(sentences[8:13])
+        discussion = " ".join(sentences[13:18])
         return "\n".join([
             "# Abstract",
-            text[:200] + '...',
-            "\n# Introduction",
-            text[200:400] + '...',
-            "\n# Results",
-            text[400:600] + '...',
-            "\n# Discussion",
-            text[600:800] + '...'
+            abstract,
+            "",
+            "# Introduction",
+            introduction,
+            "",
+            "# Results",
+            results,
+            "",
+            "# Discussion",
+            discussion,
         ])
 
     headers = {"Authorization": f"Bearer {API_KEY}"}
