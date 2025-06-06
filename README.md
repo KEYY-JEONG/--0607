@@ -40,3 +40,23 @@ T: Tone & Style (스타일)
 E: Example (예시)
 
 사용자가 “sample.pdf” 업로드 → 서버에서 추출 → OPEN API 호출 → 요약하여-> Markdown 저장 → Gemini API로 시각화 → 최종 result.html에 출력
+
+## Usage
+
+1. Install dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+2. Run the Flask server
+
+```bash
+python app.py
+```
+
+3. Visit `http://localhost:5000` in your browser to upload a PDF and view the results.
+
+Generated summaries are saved in the `docs/` folder as both Markdown and DOCX files. Visualization images are placed under `static/images/`. Output filenames are derived from the uploaded PDF and include a timestamp so previous results are preserved.
+
+Optionally set `SUMMARY_API_URL`, `SUMMARY_API_KEY`, `VISUAL_API_URL`, and `VISUAL_API_KEY` environment variables to integrate external AI services. Without these, the server performs a simple local summary and creates a placeholder visualization.
