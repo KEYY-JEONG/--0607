@@ -41,6 +41,7 @@ E: Example (예시)
 
 사용자가 “sample.pdf” 업로드 → 서버에서 추출 → OPEN API 호출 → 요약하여-> Markdown 저장 → Gemini API로 시각화 → 최종 result.html에 출력
 
+
 ## Step‑by‑Step Guide
 
 The following instructions assume you will clone the repository into
@@ -118,3 +119,4 @@ location.
 Generated summaries are saved in the `docs/` folder as both Markdown and
 DOCX files. Visualization images are placed under `static/images/`. Each
 file name includes a timestamp so previous results are preserved.
+

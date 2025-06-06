@@ -1,13 +1,16 @@
 import os
 
+
 try:
     import requests  # Needed for external API calls
 except ImportError:  # pragma: no cover - requests may not be installed
     requests = None
 
 
+
 def generate_visual(summary: str, output_path: str) -> None:
     """Generate a visualization image from summary text via external API."""
+
     anthropic_key = os.getenv('ANTHROPIC_API_KEY')
     gemini_key = os.getenv('GEMINI_API_KEY')
 
@@ -20,11 +23,13 @@ def generate_visual(summary: str, output_path: str) -> None:
                 "Pillow is required to generate placeholder images but is not installed"
             ) from e
 
+
         img = Image.new('RGB', (800, 400), color=(73, 109, 137))
         d = ImageDraw.Draw(img)
         d.text((10, 10), 'Visualization Placeholder', fill=(255, 255, 0))
         img.save(output_path)
         return
+
 
     if requests is None:
         raise RuntimeError(
@@ -54,4 +59,5 @@ def generate_visual(summary: str, output_path: str) -> None:
         )
     resp.raise_for_status()
     with open(output_path, "wb") as f:
+
         f.write(resp.content)
