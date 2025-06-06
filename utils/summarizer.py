@@ -1,9 +1,12 @@
 import os
 import re
-import requests
 
-API_URL = os.environ.get('SUMMARY_API_URL')
-API_KEY = os.environ.get('SUMMARY_API_KEY')
+
+try:
+    import requests  # Only needed when using the external API
+except ImportError:  # pragma: no cover - requests may not be installed
+    requests = None
+
 
 
 def summarize_text(text: str) -> str:
@@ -13,7 +16,11 @@ def summarize_text(text: str) -> str:
     Otherwise fallback to a simple local summarization based on sentence
     extraction.
     """
-    if not API_URL or not API_KEY:
+
+    api_key = os.getenv('OPENAI_API_KEY')
+
+    if not api_key:
+
         sentences = [s.strip() for s in re.split(r'(?<=[.!?])\s+', text) if s.strip()]
         parts = {
             "Abstract": sentences[:3],
@@ -29,8 +36,32 @@ def summarize_text(text: str) -> str:
             lines.append("")
         return "\n".join(lines).strip()
 
-    headers = {"Authorization": f"Bearer {API_KEY}"}
-    payload = {"text": text}
-    resp = requests.post(API_URL, json=payload, headers=headers, timeout=30)
+
+    if requests is None:
+        raise RuntimeError(
+            "The requests package is required for API summarization but is not installed."
+        )
+
+    headers = {
+        "Authorization": f"Bearer {api_key}",
+        "Content-Type": "application/json",
+    }
+    prompt = (
+        "Summarize the following text into the sections: "
+        "Abstract, Introduction, Results, Discussion."
+        " Provide the response in Markdown format.\n\n" + text
+    )
+    data = {
+        "model": "gpt-3.5-turbo",
+        "messages": [{"role": "user", "content": prompt}],
+        "temperature": 0.3,
+    }
+    resp = requests.post(
+        "https://api.openai.com/v1/chat/completions",
+        json=data,
+        headers=headers,
+        timeout=30,
+    )
     resp.raise_for_status()
-    return resp.json().get('summary', '')
+    return resp.json()["choices"][0]["message"]["content"].strip()
+

@@ -1,7 +1,12 @@
 import os
 from datetime import datetime
+
+from dotenv import load_dotenv
 from flask import Flask, render_template, request, send_from_directory, redirect, url_for
 from werkzeug.utils import secure_filename
+
+load_dotenv()  # Load environment variables from a .env file if present
+
 from utils.pdf_utils import extract_text_from_pdf
 from utils.summarizer import summarize_text
 from utils.visualizer import generate_visual

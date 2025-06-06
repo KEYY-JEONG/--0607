@@ -41,22 +41,82 @@ E: Example (예시)
 
 사용자가 “sample.pdf” 업로드 → 서버에서 추출 → OPEN API 호출 → 요약하여-> Markdown 저장 → Gemini API로 시각화 → 최종 result.html에 출력
 
-## Usage
 
-1. Install dependencies
+## Step‑by‑Step Guide
 
-```bash
-pip install -r requirements.txt
-```
+The following instructions assume you will clone the repository into
+`/Users/keyy/0607_Codex`. Adapt the paths if you choose a different
+location.
 
-2. Run the Flask server
+1. **Install Python**
+   
+   Make sure Python 3.8 or higher is installed and available in your
+   command line.
 
-```bash
-python app.py
-```
+2. **Clone the repository**
 
-3. Visit `http://localhost:5000` in your browser to upload a PDF and view the results.
+   Open a terminal and run:
 
-Generated summaries are saved in the `docs/` folder as both Markdown and DOCX files. Visualization images are placed under `static/images/`. Output filenames are derived from the uploaded PDF and include a timestamp so previous results are preserved.
+   ```bash
+   mkdir -p /Users/keyy/0607_Codex
+   git clone <repository-url> /Users/keyy/0607_Codex
+   cd /Users/keyy/0607_Codex
+   ```
 
-Optionally set `SUMMARY_API_URL`, `SUMMARY_API_KEY`, `VISUAL_API_URL`, and `VISUAL_API_KEY` environment variables to integrate external AI services. Without these, the server performs a simple local summary and creates a placeholder visualization.
+   Replace `<repository-url>` with the HTTPS address of this project.
+
+3. **Create a virtual environment (recommended)**
+   
+   ```bash
+   python3 -m venv venv
+   source venv/bin/activate
+   ```
+
+4. **Install dependencies**
+   
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+   If you run into connection errors while installing packages, you can
+   download the required `.whl` files on another machine and transfer them
+   here. Install them individually with `pip install <package>.whl`.
+
+5. **Create a `.env` file for API keys**
+
+   Copy the provided example and fill in your credentials. Leave them blank if
+   you want to run everything locally.
+
+   ```bash
+   cp .env.example .env
+   # Edit .env in your editor and add API keys
+   ```
+
+   The application loads these variables automatically using `python-dotenv`.
+   You may also export them in your shell for the current session:
+
+   ```bash
+   export OPENAI_API_KEY="your_actual_openai_key_here"
+   export ANTHROPIC_API_KEY="your_actual_anthropic_key_here"
+   export GEMINI_API_KEY="your_actual_gemini_key_here"
+   ```
+
+   - `OPENAI_API_KEY` – used for text summarization
+   - `ANTHROPIC_API_KEY` – used for generating visualization prompts
+   - `GEMINI_API_KEY` – reserved for future Gemini image generation
+
+6. **Run the Flask server**
+   
+   ```bash
+   python app.py
+   ```
+
+7. **Open the web interface**
+   
+   Visit `http://localhost:5000` in your browser. Upload a PDF to see the
+   generated summary and visualization.
+
+Generated summaries are saved in the `docs/` folder as both Markdown and
+DOCX files. Visualization images are placed under `static/images/`. Each
+file name includes a timestamp so previous results are preserved.
+
