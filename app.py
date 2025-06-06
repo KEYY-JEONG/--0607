@@ -1,5 +1,7 @@
 import os
+from datetime import datetime
 from flask import Flask, render_template, request, send_from_directory, redirect, url_for
+from werkzeug.utils import secure_filename
 from utils.pdf_utils import extract_text_from_pdf
 from utils.summarizer import summarize_text
 from utils.visualizer import generate_visual
@@ -23,21 +25,35 @@ def upload_file():
         file = request.files['pdf']
         if file.filename == '':
             return 'No selected file', 400
-        filepath = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
+
+        filename = secure_filename(file.filename)
+        filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(filepath)
 
         text = extract_text_from_pdf(filepath)
         summary = summarize_text(text)
 
-        md_path = os.path.join(app.config['DOCS_FOLDER'], 'summary.md')
-        docx_path = os.path.join(app.config['DOCS_FOLDER'], 'summary.docx')
+        base = os.path.splitext(filename)[0]
+        timestamp = datetime.utcnow().strftime('%Y%m%d%H%M%S')
+        md_name = f"{base}_{timestamp}.md"
+        docx_name = f"{base}_{timestamp}.docx"
+        img_name = f"{base}_{timestamp}.png"
+
+        md_path = os.path.join(app.config['DOCS_FOLDER'], md_name)
+        docx_path = os.path.join(app.config['DOCS_FOLDER'], docx_name)
         save_markdown(summary, md_path)
         save_docx(summary, docx_path)
 
-        image_path = os.path.join(app.config['IMAGE_FOLDER'], 'visual.png')
+        image_path = os.path.join(app.config['IMAGE_FOLDER'], img_name)
         generate_visual(summary, image_path)
 
-        return render_template('result.html', summary=summary.split('\n'), image_url=url_for('static', filename='images/visual.png'))
+        return render_template(
+            'result.html',
+            summary=summary.split('\n'),
+            image_url=url_for('static', filename=f'images/{img_name}'),
+            md_file=md_name,
+            docx_file=docx_name,
+        )
     return render_template('upload.html')
 
 

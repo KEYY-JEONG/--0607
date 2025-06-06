@@ -12,11 +12,11 @@
 {% endfor %}
     </pre>
     <p>
-        <a href="{{ url_for('static', filename='images/visual.png') }}" download>Download Image</a>
+        <a href="{{ image_url }}" download>Download Image</a>
         |
-        <a href="{{ url_for('download_file', filename='summary.md') }}">Download Markdown</a>
+        <a href="{{ url_for('download_file', filename=md_file) }}">Download Markdown</a>
         |
-        <a href="{{ url_for('download_file', filename='summary.docx') }}">Download DOCX</a>
+        <a href="{{ url_for('download_file', filename=docx_file) }}">Download DOCX</a>
     </p>
     <h2>Visualization</h2>
     <img src="{{ image_url }}" alt="Visualization">

@@ -14,24 +14,20 @@ def summarize_text(text: str) -> str:
     extraction.
     """
     if not API_URL or not API_KEY:
-        sentences = re.split(r'(?<=[.!?])\s+', text.strip())
-        abstract = " ".join(sentences[:3])
-        introduction = " ".join(sentences[3:8])
-        results = " ".join(sentences[8:13])
-        discussion = " ".join(sentences[13:18])
-        return "\n".join([
-            "# Abstract",
-            abstract,
-            "",
-            "# Introduction",
-            introduction,
-            "",
-            "# Results",
-            results,
-            "",
-            "# Discussion",
-            discussion,
-        ])
+        sentences = [s.strip() for s in re.split(r'(?<=[.!?])\s+', text) if s.strip()]
+        parts = {
+            "Abstract": sentences[:3],
+            "Introduction": sentences[3:8],
+            "Results": sentences[8:13],
+            "Discussion": sentences[13:18],
+        }
+
+        lines = []
+        for title, seg in parts.items():
+            lines.append(f"# {title}")
+            lines.append(" ".join(seg) if seg else "N/A")
+            lines.append("")
+        return "\n".join(lines).strip()
 
     headers = {"Authorization": f"Bearer {API_KEY}"}
     payload = {"text": text}
