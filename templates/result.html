@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Summary Result</title>
+</head>
+<body>
+    <h1>Structured Summary</h1>
+    <pre>
+{% for line in summary %}
+{{ line }}
+{% endfor %}
+    </pre>
+    <h2>Visualization</h2>
+    <img src="{{ image_url }}" alt="Visualization">
+    <p><a href="/">Process another file</a></p>
+</body>
+</html>
